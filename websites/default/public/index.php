@@ -1,4 +1,5 @@
 <?php
+
 // handle requests to /product/:id 
 if (preg_match("/^\/product\/[a-zA-Z0-9]+$/", $_SERVER["REQUEST_URI"], $matches)) {
 	$parts = explode("/", $matches[0]);
@@ -11,4 +12,3 @@ if (preg_match("/^\/product\/[a-zA-Z0-9]+$/", $_SERVER["REQUEST_URI"], $matches)
 	http_response_code(404);
 	echo "404 Not Found";
 }
-
