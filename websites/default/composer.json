@@ -1,0 +1,10 @@
+{
+    "name": "trulyao/eds",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "Trulyao\\Eds\\": "src/"
+        }
+    },
+    "require": {}
+}
