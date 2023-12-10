@@ -75,7 +75,9 @@ CREATE TABLE IF NOT EXISTS enquiries (
 );
 
 -- default admin user
+-- username: admin
+-- password: admin
 INSERT INTO users 
   (first_name, last_name, username, password, email, is_admin, perm)
 VALUES 
-  ('John', 'Doe', 'admin', '$2y$10$J3x8Nbfk19lfGRz8vyBEq.tiwlIlfche9Ci1TOt1MiGThRRMQNwGe', 'admin@v.je', 1, 15);
+  ('John', 'Doe', 'admin', '$2y$10$WZrQgcRceAnL298aGjgaJuA4ib0TPr0WKpXMo8Luq52ZxSht6Xu4K', 'admin@v.je', 1, 15);

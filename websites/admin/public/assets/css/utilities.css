@@ -1,0 +1,47 @@
+.h-screen {
+	height: 100vh;
+}
+
+.w-screen {
+	width: 100vw;
+}
+
+.w-full {
+	width: 100%;
+}
+
+.flex {
+	display: flex;
+}
+
+.flex-column {
+	flex-direction: column;
+}
+
+.flex-center {
+	align-items: center;
+	justify-content: center;
+}
+
+.container {
+	max-width: 95%;
+	margin: 0 auto;
+}
+
+@media (min-width: 576px) {
+	.container {
+		max-width: 540px;
+	}
+}
+
+@media (min-width: 768px) {
+	.container {
+		max-width: 720px;
+	}
+}
+
+@media (min-width: 992px) {
+	.container {
+		max-width: 960px;
+	}
+}

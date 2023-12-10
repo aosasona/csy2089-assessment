@@ -22,9 +22,6 @@ abstract class BaseModel
     self::$db = Database::getInstance()->getConnection();
   }
 
-
-
-
   public static function getTableName(): string
   {
     return self::pluralize(strtolower((new \ReflectionClass(static::class))->getShortName()));
@@ -33,17 +30,31 @@ abstract class BaseModel
   public static function findById(int $id): ?self
   {
     $sql = "SELECT * FROM " . self::getTableName() . " WHERE id = ?";
-    $stmt = self::$db->prepare($sql);
+    $stmt = self::getConnection()->prepare($sql);
     $stmt->execute([$id]);
     $stmt->setFetchMode(\PDO::FETCH_CLASS, static::class);
-    return $stmt->fetch();
+    return $stmt->fetch() ?: null;
   }
+
+  public static function findBy(string $column, mixed $value): ?self
+  {
+    if (!property_exists(static::class, $column)) {
+      throw new \Exception("Column {$column} does not exist on this model ({$this->getTableName()})");
+    }
+
+    $sql = "SELECT * FROM " . self::getTableName() . " WHERE {$column} = ?";
+    $stmt = self::getConnection()->prepare($sql);
+    $stmt->execute([$value]);
+    $stmt->setFetchMode(\PDO::FETCH_CLASS, static::class);
+    return $stmt->fetch() ?: null;
+  }
+
   /**
    * @param array<int,mixed> $params
    */
   public static function query(string $sql, array $params = []): array
   {
-    $stmt = self::$db->prepare($sql);
+    $stmt = self::getConnection()->prepare($sql);
     $stmt->execute($params);
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
   }
@@ -54,14 +65,14 @@ abstract class BaseModel
    */
   public static function execute(string $sql, array $params = []): bool
   {
-    $stmt = self::$db->prepare($sql);
+    $stmt = self::getConnection()->prepare($sql);
     return $stmt->execute($params);
   }
 
   public static function all(): array
   {
     $sql = "SELECT * FROM " . self::getTableName();
-    $stmt = self::$db->prepare($sql);
+    $stmt = self::getConnection()->prepare($sql);
     $stmt->execute();
     $stmt->setFetchMode(\PDO::FETCH_CLASS, static::class);
     return $stmt->fetchAll();
@@ -72,7 +83,7 @@ abstract class BaseModel
   public static function where(string $expr, array $params): array
   {
     $sql = "SELECT * FROM " . self::getTableName() . " WHERE {$expr}";
-    $stmt = self::$db->prepare($sql);
+    $stmt = self::getConnection()->prepare($sql);
     $stmt->execute($params);
     $stmt->setFetchMode(\PDO::FETCH_CLASS, static::class);
     return $stmt->fetchAll();
@@ -81,12 +92,12 @@ abstract class BaseModel
 
   public static function lastInsertedId(): int
   {
-    return self::$db->lastInsertId();
+    return self::getConnection()->lastInsertId();
   }
 
   public static function count(): int
   {
-    $stmt = self::$db->prepare("SELECT COUNT(*) FROM " . self::getTableName());
+    $stmt = self::getConnection()->prepare("SELECT COUNT(*) FROM " . self::getTableName());
     $stmt->execute();
     return $stmt->fetchColumn();
   }
@@ -191,13 +202,19 @@ abstract class BaseModel
     return $values;
   }
 
+  protected static function getConnection(): PDO
+  {
+    if (!isset(self::$db)) {
+      return Database::getInstance()->getConnection();
+    }
 
+    return self::$db;
+  }
 
   protected static function getPrimaryKeyColumn(): string
   {
     return "id";
   }
-
 
 
   private static function pluralize(string $word): string
