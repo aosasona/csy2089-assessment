@@ -2,7 +2,7 @@
     "name": "trulyao/edsadmin",
     "autoload": {
         "psr-4": {
-            "Trulyao\\Edsadmin\\": "src/"
+            "Trulyao\\EdsAdmin\\": "src/"
         }
     },
     "require": {}
