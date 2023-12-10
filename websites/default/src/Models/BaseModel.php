@@ -78,6 +78,61 @@ abstract class BaseModel
     return $stmt->execute($values);
   }
 
+  /**
+   * @param   array<string>|null $forceUpdate
+   * @example ```
+   * $old = User::findById(1);
+   * $user = new User();
+   * $user->id = $old->id;
+   * $user->username = "new_username";
+   * $user->update();
+   * ```
+   * */
+
+  public function update(?array $forceUpdate = null): bool
+  {
+    $values = [];
+    $columns = [];
+    foreach ($this->getValues() as $key => $value) {
+      // if the key is in the forceUpdate array, add it to the update query even if the value is null
+      if (($value !== null && !in_array($key, $forceUpdate ?? [])) && $key !== self::getPrimaryKey()) {
+        $values[$key] = $value;
+        $columns[] = "{$key} = :{$key}";
+      } elseif ($key === self::getPrimaryKey()) {
+        // if the key is the primary key, add it to the values array ONLY because we don't want to update the primary key
+        $values[$key] = $value;
+      }
+    }
+
+    if (empty($columns)) {
+      return false;
+    } elseif (!isset($values[self::getPrimaryKey()])) {
+      throw new \Exception("Cannot update record without primary key, if the primary key for this model is not `id` override the self::getPrimaryKey() method");
+    }
+
+    $sql = "UPDATE {$this->getTableName()} SET {$columns} WHERE " . self::getPrimaryKey() . " = :id";
+    $stmt = $this->db->prepare($sql);
+    return $stmt->execute($values);
+  }
+
+  /**
+   * @description Useful for updating a model with a partial model, for example when updating a user profile and only updating the fields that were changed
+   * */
+  public function merge(self $model): self
+  {
+    foreach ($this->getAttributes() as $attr) {
+      if ($model->{$attr} !== null) {
+        $this->{$attr} = $model->{$attr};
+      }
+    }
+    return $this;
+  }
+
+
+  protected static function getPrimaryKey(): string
+  {
+    return "id";
+  }
 
   private static function pluralize(string $word): string
   {
