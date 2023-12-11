@@ -32,7 +32,8 @@ enum Permission: int
     }
     return Permission::from($value);
   }
-};
+}
+
 
 class User extends BaseModel
 {
@@ -53,5 +54,10 @@ class User extends BaseModel
       return Permission::fromValue($this->perm);
     }
     return $this->{$name};
+  }
+
+  public function can(Permission $permission): bool
+  {
+    return ($this->perm & $permission->value) === $permission->value;
   }
 }

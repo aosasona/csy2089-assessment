@@ -49,8 +49,19 @@ abstract class BaseModel
     return $stmt->fetch() ?: null;
   }
 
+  public static function paginate(int $page, int $limit): array
+  {
+    $offset = ($page - 1) * $limit;
+    $sql = "SELECT * FROM " . self::getTableName() . " LIMIT {$limit} OFFSET {$offset}";
+    $stmt = self::getConnection()->prepare($sql);
+    $stmt->execute();
+    $stmt->setFetchMode(\PDO::FETCH_CLASS, static::class);
+    return $stmt->fetchAll() ?: [];
+  }
+
   /**
-   * @param array<int,mixed> $params
+   * @param  array<int,mixed> $params
+   * @return array|bool
    */
   public static function query(string $sql, array $params = []): array
   {
@@ -68,7 +79,9 @@ abstract class BaseModel
     $stmt = self::getConnection()->prepare($sql);
     return $stmt->execute($params);
   }
-
+  /**
+   * @return array|bool
+   */
   public static function all(): array
   {
     $sql = "SELECT * FROM " . self::getTableName();
@@ -78,7 +91,8 @@ abstract class BaseModel
     return $stmt->fetchAll();
   }
   /**
-   * @param array<int,mixed> $params
+   * @param  array<int,mixed> $params
+   * @return array|bool
    */
   public static function where(string $expr, array $params): array
   {

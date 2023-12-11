@@ -3,6 +3,8 @@
 require_once __DIR__ . "/../vendor/autoload.php";
 require_once __DIR__ . "/../../default/vendor/autoload.php";
 
+use Trulyao\Eds\Auth;
+
 if (session_status() !== PHP_SESSION_ACTIVE) {
   session_start();
 }
@@ -22,6 +24,9 @@ function dd($var): void
 function render_header(string $title): void
 {
   include_once "../components/header.php";
+  if (Auth::isLoggedIn()) {
+    include_once "../components/nav.php";
+  }
 }
 
 function render_footer(): void
