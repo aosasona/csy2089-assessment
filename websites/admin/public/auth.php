@@ -38,26 +38,17 @@ if (isset($_POST['sign_in'])) {
 
     Auth::login($user, isset($_POST['remember_me']));
     redirect("/");
-  } catch (ClientException $e) {
-    $_SESSION['error'] = $e->getMessage();
-    redirect("/auth.php");
-  } catch (Exception $e) {
-    $_SESSION['error'] = "Something went wrong";
-    redirect("/auth.php");
+  } catch (Throwable $e) {
+    handle_throwable($e, "/auth.php");
   }
 }
-
-$err = $_SESSION['error'] ?? null;
-unset($_SESSION['error']);
 
 render_header("Login");
 ?>
 
 <main class="container flex flex-center h-screen">
   <form id="auth" method="POST">
-    <?php if (isset($err)) : ?>
-      <div class="error"><?php echo $err ?></div>
-    <?php endif; ?>
+    <?php render_error(); ?>
     <div class="form-control">
       <label for="username">Username</label>
       <input type="text" name="username" id="username" placeholder="jdoe" />

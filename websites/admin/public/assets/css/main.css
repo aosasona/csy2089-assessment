@@ -40,14 +40,24 @@ body {
 	background-color: var(--bg-primary);
 }
 
-::placeholder {
-	color: var(--outline);
-}
-
 h1 {
-	font-size: 2.5rem;
+	font-size: 2rem;
 	font-weight: 700;
 	line-height: 1.2;
+}
+
+h2 {
+	font-size: 1.75rem;
+	font-weight: 500;
+	line-height: 1.25;
+}
+
+nav {
+	margin-bottom: 1.5rem;
+}
+
+::placeholder {
+	color: var(--outline);
 }
 
 button,
@@ -70,6 +80,7 @@ button:hover,
 	transform: translateY(-2px);
 	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
+
 a {
 	transition: all 0.1s ease-in-out;
 	text-decoration: none;
@@ -85,26 +96,19 @@ a {
 	margin-bottom: 1rem;
 }
 
-form#auth {
-	width: 100%;
-	max-width: 300px;
-	margin: 0 auto;
-}
-
-form#auth .form-control {
+.form-control {
 	margin-bottom: 1rem;
 }
 
-form#auth .form-control label {
+.form-control label {
 	display: block;
 	color: #3a3a3a;
 	font-weight: 500;
 	margin-bottom: 0.5rem;
 }
 
-form#auth .form-control input {
+.form-control input {
 	display: block;
-	width: 100%;
 	padding: 0.55rem 0.75rem;
 	border: 1px solid var(--outline);
 	border-radius: var(--border-radius);
@@ -112,7 +116,7 @@ form#auth .form-control input {
 	transition: all 0.3s ease-in-out;
 }
 
-form#auth .form-control input:focus {
+.form-control input:focus {
 	border-color: var(--primary);
 	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
@@ -122,6 +126,16 @@ form#auth .form-control input[type="checkbox"] {
 	width: auto;
 	padding: 0;
 	margin: 0 0.5rem 0 0;
+}
+
+form#auth .form-control input {
+	width: 100%;
+}
+
+form#auth {
+	width: 100%;
+	max-width: 300px;
+	margin: 0 auto;
 }
 
 form#auth .form-control label[for="remember_me"] {

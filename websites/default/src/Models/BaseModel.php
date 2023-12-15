@@ -39,16 +39,18 @@ abstract class BaseModel
   public static function findBy(string $column, mixed $value): ?self
   {
     if (!property_exists(static::class, $column)) {
-      throw new \Exception("Column {$column} does not exist on this model ({$this->getTableName()})");
+      throw new \Exception("Column {$column} does not exist on this model (" . self::getTableName() . ")");
     }
 
     $sql = "SELECT * FROM " . self::getTableName() . " WHERE {$column} = ?";
     $stmt = self::getConnection()->prepare($sql);
     $stmt->execute([$value]);
-    $stmt->setFetchMode(\PDO::FETCH_CLASS, static::class);
+    $stmt->setFetchMode(PDO::FETCH_CLASS, static::class);
     return $stmt->fetch() ?: null;
   }
-
+  /**
+   * @return array|bool
+   */
   public static function paginate(int $page, int $limit): array
   {
     $offset = ($page - 1) * $limit;

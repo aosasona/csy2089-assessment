@@ -10,6 +10,10 @@
 	width: 100%;
 }
 
+.w-1\/2 {
+	width: 50%;
+}
+
 .flex {
 	display: flex;
 }

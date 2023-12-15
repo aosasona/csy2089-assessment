@@ -18,7 +18,7 @@ render_header("Products");
 
 <main class="mt-4">
   <div class="w-full flex justify-end">
-    <button title="Create new product">New product</button>
+    <a href="/manage/product.php" class="btn" title="Create new product">New product</a>
   </div>
 
   <div>
