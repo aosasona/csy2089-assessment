@@ -15,9 +15,15 @@ function redirect(string $url): void
   exit;
 }
 
-function dd($var): void
+// Pretty dump
+function dd(...$vars): void
 {
-  var_dump($var);
+  foreach ($vars as $var) {
+    echo '<pre style="display: block; max-width:700px; background-color: #f4f4f5; border-radius: 10px; border: 1px solid #e4e4e7; margin-bottom: 1rem; margin-inline: auto; padding: .5rem 1rem;">';
+    echo "<b>" . $_SERVER["PHP_SELF"] . "</b><br/><br/>";
+    print_r($var);
+    echo "</pre>";
+  }
   exit;
 }
 

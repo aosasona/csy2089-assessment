@@ -31,7 +31,7 @@ final class Auth
   public static function getUser(): ?User
   {
     $user_id = self::getLoggedInUserID();
-    return User::findById($user_id);
+    return User::findByPK($user_id);
   }
 
   private static function getLoggedInUserID(): int

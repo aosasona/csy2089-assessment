@@ -2,6 +2,7 @@
 
 namespace Trulyao\Eds\Models;
 
+use Exception;
 use Trulyao\Eds\Database;
 use PDO;
 
@@ -59,7 +60,7 @@ abstract class BaseModel
     return $stmt->fetchColumn() > 0;
   }
 
-  public static function findById(int $id): ?self
+  public static function findByPK(int $id): ?self
   {
     $sql = "SELECT * FROM " . self::getTableName() . " WHERE id = ?";
     $stmt = self::getConnection()->prepare($sql);
@@ -83,7 +84,7 @@ abstract class BaseModel
   /**
    * @return array|bool
    */
-  public static function paginate(int $page, int $limit): array
+  public static function paginate(int $page, int $limit = 50): array
   {
     $offset = ($page - 1) * $limit;
     $sql = "SELECT * FROM " . self::getTableName() . " LIMIT {$limit} OFFSET {$offset}";
@@ -91,6 +92,12 @@ abstract class BaseModel
     $stmt->execute();
     $stmt->setFetchMode(\PDO::FETCH_CLASS, static::class);
     return $stmt->fetchAll() ?: [];
+  }
+
+  public static function getPageCount(int $limit = 50): int
+  {
+    $count = self::count();
+    return ceil($count / $limit);
   }
 
   /**
@@ -160,6 +167,18 @@ abstract class BaseModel
 
   public function save(): bool
   {
+    // If the primary key is not null, update instead
+    if (!empty($this->{self::getPrimaryKeyColumn()})) {
+      $diff = [];
+      $current_state = self::findByPK($this->{self::getPrimaryKeyColumn()});
+      foreach ($this->getAttributes() as $key) {
+        if ($current_state->{$key} !== $this->{$key} && $key !== self::getPrimaryKeyColumn()) {
+          $diff[] = $key;
+        }
+      }
+      return $this->update($diff);
+    }
+
     $values = array_filter($this->getValues(), fn ($value) => $value !== null);
     $columns = implode(", ", array_keys($values));
     $placeholders = implode(", ", array_map(fn ($col) => ":{$col}", array_keys($values)));
@@ -169,7 +188,7 @@ abstract class BaseModel
   }
 
   /**
-   * @param   array<string>|null $forceUpdate
+   * @param   array<string> $update_columns - an array of columns to update, if null, all columns will be updated except the primary key
    * @example ```
    * $old = User::findById(1);
    * $user = new User();
@@ -179,13 +198,20 @@ abstract class BaseModel
    * ```
    * */
 
-  public function update(?array $forceUpdate = null): bool
+  private function update(array $update_columns = []): bool
   {
     $values = [];
     $columns = [];
+
+    // Ensure the primary key is not in the list of columns to update
+    if (in_array(self::getPrimaryKeyColumn(), $update_columns)) {
+      throw new Exception("Primary key cannot and must not be updated, please remove from updates list");
+    }
+
     foreach ($this->getValues() as $key => $value) {
-      // if the key is in the forceUpdate array, add it to the update query even if the value is null
-      if (($value !== null && !in_array($key, $forceUpdate ?? [])) && $key !== self::getPrimaryKeyColumn()) {
+      // if the key is in the update array, add it to the values array and columns array as long as it's not the primary key
+      // if the update array is null, add all columns to the values array and columns array as long as it's not the primary key
+      if ((!empty($update_columns) && in_array($key, $update_columns)) || (empty($update_columns) && $key !== self::getPrimaryKeyColumn())) {
         $values[$key] = $value;
         $columns[] = "{$key} = :{$key}";
       } elseif ($key === self::getPrimaryKeyColumn()) {
@@ -200,7 +226,8 @@ abstract class BaseModel
       throw new \Exception("Cannot update record without primary key, if the primary key for this model is not `id` override the self::getPrimaryKeyColumn() method");
     }
 
-    $sql = "UPDATE {$this->getTableName()} SET {$columns} WHERE " . self::getPrimaryKeyColumn() . " = :id";
+    $set_str = implode(", ", $columns);
+    $sql = "UPDATE {$this->getTableName()} SET {$set_str} WHERE " . self::getPrimaryKeyColumn() . " = :id";
     $stmt = $this->db->prepare($sql);
     return $stmt->execute($values);
   }
@@ -223,9 +250,9 @@ abstract class BaseModel
   {
     if (!property_exists($this, $name)) {
       throw new \Exception("Property {$name} does not exist on this model ({$this->getTableName()})");
-    } elseif ($name === "id") {
-      throw new \Exception("Cannot set id property");
-    } elseif ($name === "created_at" || $name === "updated_at") {
+    } elseif ($name === self::getPrimaryKeyColumn()) {
+      throw new \Exception("Cannot set `" . self::getPrimaryKeyColumn() . "` property because if is the primary key");
+    } elseif (in_array($name, ["created_at", "updated_at", "last_updated_at"])) {
       throw new \Exception("Cannot set {$name} property, this is set automatically");
     } elseif (is_array($value) || is_object($value)) {
       throw new \Exception("{$name} must be a scalar value, no arrays or objects allowed");
