@@ -5,26 +5,58 @@ namespace Trulyao\Eds\Models;
 use Trulyao\Eds\Database;
 use PDO;
 
+enum Condition: string
+{
+  case AND = "AND";
+  case OR = "OR";
+}
+
 abstract class BaseModel
 {
-  private static PDO $db;
+  private PDO $db;
+
+  public  const OR = "OR";
+  public const AND = "AND";
 
   /**
    * @throws \Exception
    */
   public function __construct(?Database $instance = null)
   {
-    if ($instance) {
-      self::$db = $instance->getConnection();
-      return;
+    if (!empty($instance)) {
+      $this->db = $instance->getConnection();
+    } else {
+      $this->db = Database::getInstance()->getConnection();
     }
-
-    self::$db = Database::getInstance()->getConnection();
   }
 
   public static function getTableName(): string
   {
     return self::pluralize(strtolower((new \ReflectionClass(static::class))->getShortName()));
+  }
+
+  /**
+   * @param array<int,mixed> $filters
+   */
+  public static function exists(array $filters, Condition $condition = Condition::AND): bool
+  {
+    $where_parts = [];
+    if (empty($filters)) {
+      throw new \Exception("Filters cannot be empty");
+    }
+    foreach (array_keys($filters) as $key) {
+      if (!property_exists(static::class, $key)) {
+        throw new \Exception("Column {$key} does not exist on model `" . self::getTableName() . "`");
+      }
+
+      $where_parts[] = "{$key} = :{$key}";
+    }
+
+    $where = implode(" {$condition->value} ", $where_parts);
+    $sql = "SELECT COUNT(*) FROM " . self::getTableName() . " WHERE {$where}";
+    $stmt = self::getConnection()->prepare($sql);
+    $stmt->execute($filters);
+    return $stmt->fetchColumn() > 0;
   }
 
   public static function findById(int $id): ?self
@@ -122,7 +154,7 @@ abstract class BaseModel
   public function delete(): bool
   {
     $sql = "DELETE FROM " . self::getTableName() . " WHERE id = ?";
-    $stmt = self::$db->prepare($sql);
+    $stmt = $this->db->prepare($sql);
     return $stmt->execute([$this->{self::getPrimaryKeyColumn()}]);
   }
 
@@ -218,13 +250,10 @@ abstract class BaseModel
     return $values;
   }
 
+  // Only to be used in static methods
   protected static function getConnection(): PDO
   {
-    if (!isset(self::$db)) {
-      return Database::getInstance()->getConnection();
-    }
-
-    return self::$db;
+    return Database::getInstance()->getConnection();
   }
 
   protected static function getPrimaryKeyColumn(): string
@@ -236,7 +265,7 @@ abstract class BaseModel
   private static function pluralize(string $word): string
   {
     if (str_ends_with($word, "y")) {
-      return substr($word, -1) . "ies";
+      return substr($word, 0, -1) . "ies";
     }
     return $word . "s";
   }
