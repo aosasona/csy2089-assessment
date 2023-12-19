@@ -13,7 +13,7 @@ final class Category extends BaseModel
   #[Override]
   public function save(): bool
   {
-    $this->name = ucwords(trim($this->name));
+    $this->name = ucwords(strtolower(trim($this->name)));
     $this->slug = self::slugify($this->name);
     return parent::save();
   }

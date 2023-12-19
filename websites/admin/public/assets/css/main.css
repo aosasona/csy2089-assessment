@@ -22,6 +22,8 @@
 	--color-800: #27272a;
 	--color-900: #18181b;
 	--color-950: #09090b;
+
+	--action-blue: #2563eb;
 }
 
 * {
@@ -98,65 +100,67 @@ a {
 
 .form-control {
 	margin-bottom: 1rem;
-}
 
-.form-control label {
-	display: block;
-	color: #3a3a3a;
-	font-weight: 500;
-	margin-bottom: 0.5rem;
-}
+	& label {
+		display: block;
+		color: #3a3a3a;
+		font-weight: 500;
+		margin-bottom: 0.5rem;
+	}
 
-.form-control input {
-	display: block;
-	padding: 0.55rem 0.75rem;
-	border: 1px solid var(--outline);
-	border-radius: var(--border-radius);
-	outline: none;
-	transition: all 0.3s ease-in-out;
-}
+	& input {
+		display: block;
+		padding: 0.55rem 0.75rem;
+		border: 1px solid var(--outline);
+		border-radius: var(--border-radius);
+		outline: none;
+		transition: all 0.3s ease-in-out;
 
-.form-control input:focus {
-	border-color: var(--primary);
-	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-
-form#auth .form-control input[type="checkbox"] {
-	display: inline-block;
-	width: auto;
-	padding: 0;
-	margin: 0 0.5rem 0 0;
-}
-
-form#auth .form-control input {
-	width: 100%;
+		&:focus {
+			border-color: var(--primary);
+			box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+		}
+	}
 }
 
 form#auth {
 	width: 100%;
 	max-width: 300px;
 	margin: 0 auto;
+
+	& .form-control {
+		& input {
+			width: 100%;
+		}
+
+		& input[type="checkbox"] {
+			display: inline-block;
+			width: auto;
+			padding: 0;
+			margin: 0 0.5rem 0 0;
+		}
+		& label[for="remember_me"] {
+			display: inline-block;
+			margin: 0;
+			padding: 0;
+		}
+	}
+
+	& button {
+		width: 100%;
+		margin-top: 1rem;
+	}
 }
 
-form#auth .form-control label[for="remember_me"] {
-	display: inline-block;
-	margin: 0;
-	padding: 0;
-}
-
-form#auth button {
-	width: 100%;
-	margin-top: 1rem;
-}
-
-.nav-bar p {
-	color: var(--color-500);
-	padding: 0.75rem 0;
-	text-align: right;
-}
-
-.nav-bar b {
-	color: var(--color-900);
+.nav-bar {
+	& p {
+		color: var(--color-500);
+		padding: 0.75rem 0;
+		text-align: right;
+	}
+	& b {
+		color: var(--color-900);
+	}
 }
 
 .nav-links {
@@ -165,70 +169,117 @@ form#auth button {
 	overflow-x: auto;
 	word-wrap: nowrap;
 	padding: 0.3rem 0;
-}
 
-.nav-links a {
-	display: inline-block;
-	padding: 0.5rem 1rem;
-	color: var(--color-500);
-	text-decoration: none;
-	border-radius: var(--border-radius);
-	border: 0;
-}
+	&::-webkit-scrollbar {
+		display: none;
+	}
 
-.nav-links a:hover {
-	color: var(--color-900);
-	background-color: var(--color-100);
-}
+	& a {
+		display: inline-block;
+		padding: 0.5rem 1rem;
+		color: var(--color-500);
+		text-decoration: none;
+		border-radius: var(--border-radius);
+		white-space: nowrap;
+		border: 0;
 
-.nav-links a.active {
-	background-color: var(--color-950);
-	color: var(--color-50);
-	border-radius: var(--border-radius);
-}
+		&:hover {
+			background-color: var(--color-100);
+			color: var(--color-900);
+		}
 
-a.logout {
-	color: red;
-}
+		&.active {
+			background-color: var(--color-950);
+			color: var(--color-100);
+		}
 
-a.logout:hover {
-	background-color: transparent;
-	color: #f8d7da;
-}
+		&.logout {
+			color: red;
 
-table.items-list {
-	width: 100%;
-	overflow-x: auto;
-	border-collapse: collapse;
-	margin-top: 2rem;
-}
-
-table.items-list thead {
-	background-color: var(--color-200);
-	text-align: center;
-}
-
-table.items-list thead th {
-	padding: 0.6rem 0.75rem;
-}
-
-table.items-list tbody tr {
-	border-bottom: 1px solid var(--color-200);
-}
-
-table.items-list tbody tr td {
-	padding: 0.5rem 0.75rem;
-}
-
-table.items-list tbody tr.no-items td {
-	padding: 1rem 0;
-}
-
-table.items-list tbody tr:last-child {
-	border-bottom: none;
+			&:hover {
+				background-color: transparent;
+				color: #f8d7da;
+			}
+		}
+	}
 }
 
 .no-items {
 	text-align: center;
 	color: var(--color-400);
+	margin-block: 3rem;
+}
+
+.container > table {
+	position: relative;
+	overflow-x: auto;
+}
+
+table.list {
+	color: var(--color-600);
+	width: 100%;
+	text-align: left;
+	margin-top: 1.25rem;
+	border-collapse: collapse;
+
+	& thead {
+		font-size: 0.75rem;
+		color: var(--color-600);
+		text-transform: uppercase;
+		background-color: var(--color-200);
+		letter-spacing: 1px;
+
+		& th {
+			padding: 0.7rem 0.8rem;
+			font-weight: 600;
+		}
+	}
+
+	& tbody {
+		& tr {
+			background-color: var(--color-50);
+			border-bottom: 1px solid var(--color-200);
+
+			& th {
+				padding: 0.6rem 0.8rem;
+				white-space: nowrap;
+				font-weight: 500;
+			}
+
+			& td {
+				padding: 0.6rem 0.8rem;
+
+				&.actions {
+					white-space: nowrap;
+					padding: 0.6rem 0.8rem;
+					display: flex;
+					gap: 1rem;
+					justify-content: flex-end;
+				}
+			}
+
+			& a {
+				&:hover {
+					opacity: 0.75;
+				}
+
+				&.action {
+					text-decoration: none;
+					color: var(--action-blue);
+
+					&.delete {
+						color: red;
+					}
+
+					& i {
+						font-size: 1rem;
+					}
+
+					& span {
+						font-size: 0.8rem;
+					}
+				}
+			}
+		}
+	}
 }

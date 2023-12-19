@@ -28,22 +28,40 @@ render_header("Products");
     <?php endif; ?>
   </div>
 
-  <table class="items-list">
-    <thead>
-      <th>Image</th>
-      <th>Name</th>
-      <th>Price</th>
-      <th>Category</th>
-      <th>Is listed</th>
-      <th>Is featured</th>
-    </thead>
 
-    <?php if (count($products) == 0) : ?>
-      <tr class="no-items">
-        <td colspan="6">No products found</td>
-      </tr>
-    <?php endif; ?>
-  </table>
+  <?php if (count($products) === 0) : ?>
+    <p class="no-items">No products found</p>
+  <?php else : ?>
+    <!-- TODO: definitely create custom css classes -->
+    <div class="container">
+      <table class="list">
+        <thead>
+          <tr>
+            <th scope="col">Product name</th>
+            <th scope="col">Color</th>
+            <th scope="col">Category</th>
+            <th scope="col">Price</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">
+              Apple MacBook Pro 17"
+            </th>
+            <td>
+              Silver
+            </td>
+            <td>
+              Laptop
+            </td>
+            <td>
+              $2999
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  <?php endif; ?>
 </main>
 
 <?php
