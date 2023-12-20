@@ -5,13 +5,15 @@ require_once __DIR__ . "/../src/prelude.php";
 use Trulyao\Eds\Models\Permission;
 use Trulyao\Eds\Models\Product;
 
+define("PAGE_SIZE", 50);
+
 require_auth();
 ensure_user_can(Permission::Read);
 
 $current_page = $_GET["page"] ?? 1;
 
 $total_products = Product::count();
-$products = Product::paginate($current_page, 50);
+$products = Product::paginate($current_page, PAGE_SIZE);
 
 render_header("Products");
 ?>
@@ -23,8 +25,15 @@ render_header("Products");
 
   <div>
     <?php if (count($products) > 0) : ?>
-      <!-- TODO: add forward and backwards buttons -->
+      <?php if ($current_page > 1) : ?>
+        <a href="/manage/products.php?page=<?php echo $current_page - 1 ?>" class="">Previous page</a>
+      <?php endif; ?>
+
       <p>Displaying <b><?php echo count($products) ?></b> of <b><?php echo $total_products ?></b> products</p>
+
+      <?php if ($current_page * 50 < $total_products) : ?>
+        <a href="/manage/products.php?page=<?php echo $current_page + 1 ?>" class="">Next page</a>
+      <?php endif; ?>
     <?php endif; ?>
   </div>
 

@@ -15,6 +15,14 @@ function redirect(string $url): void
   exit;
 }
 
+// Utility function to redirect with a message and alert using JavaScript
+// This is useful when you want to redirect the user after echoing some HTML content (using header() would fail in this case)
+function js_redirect(string $url, string $msg): void
+{
+  echo "<script>alert('{$msg}'); location.href='{$url}'</script>";
+  exit;
+}
+
 function require_auth(): void
 {
   if (!Auth::isLoggedIn()) {
@@ -92,4 +100,14 @@ function render_error()
   if ($error = get_error_message()) {
     echo "<div class=\"error\">$error</div>";
   }
+}
+
+function validate_post_regex($name, $regex)
+{
+  return filter_input(
+    INPUT_POST,
+    $name,
+    FILTER_VALIDATE_REGEXP,
+    ["options" => ["regexp" => $regex]]
+  );
 }

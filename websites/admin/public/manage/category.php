@@ -21,16 +21,15 @@ if (!empty($category_id)) {
     }
   } catch (Exception $e) {
     handle_throwable($e);
-    $msg = get_error_message();
-    echo "<script>alert('{$msg}'); location.href='/categories.php'</script>";
+    js_redirect("/categories.php", get_error_message());
   }
 }
 
 
 if (isset($_POST["create-category"])) {
-  ensure_user_can(Permission::Write);
-
   try {
+    ensure_user_can(Permission::Write);
+
     $name = htmlspecialchars($_POST["name"]);
     if (Category::exists(["name" => $name, "slug" => Category::slugify($name)], Condition::OR)) {
       throw new ClientException("Category `{$name}` already exists");
@@ -45,30 +44,28 @@ if (isset($_POST["create-category"])) {
     handle_throwable($e, "/manage/category.php");
   }
 } elseif (isset($_POST["update-category"])) {
-  ensure_user_can(Permission::Write);
-
   try {
+    ensure_user_can(Permission::Write);
+
     $current_category->name = htmlspecialchars($_POST["name"]);
     $current_category->save();
     redirect("/categories.php");
   } catch (Exception $e) {
-    handle_throwable($e, "/create/category.php?id=" . $category_id);
+    handle_throwable($e, "/manage/category.php?id=" . $category_id);
   }
 } elseif (isset($_GET["action"]) && $_GET["action"] === "delete") {
-  ensure_user_can(Permission::Delete);
-
   try {
+    ensure_user_can(Permission::Delete);
+
     if (empty($category_id)) {
       throw new ClientException("Category ID cannot be empty");
     }
 
     $current_category->delete();
+    redirect("/categories.php");
   } catch (Exception $e) {
     handle_throwable($e);
-    $msg = get_error_message();
-    echo "<script>alert('{$msg}')</script>";
-  } finally {
-    redirect("/categories.php");
+    js_redirect("/categories.php", get_error_message());
   }
 }
 
