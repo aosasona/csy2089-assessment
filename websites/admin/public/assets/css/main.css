@@ -74,13 +74,22 @@ button,
 	border: none;
 	outline: none;
 	transition: all 0.1s ease-in-out;
-}
 
-button:hover,
-.btn:hover {
-	cursor: pointer;
-	transform: translateY(-2px);
-	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+	&:hover {
+		cursor: pointer;
+		transform: translateY(-2px);
+		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+	}
+
+	&:active {
+		transform: translateY(0);
+		box-shadow: none;
+	}
+
+	&:focus {
+		outline: 2px solid var(--color-900);
+		outline-offset: 2px;
+	}
 }
 
 a {
@@ -98,9 +107,11 @@ a {
 	margin-bottom: 1rem;
 }
 
+/* Forms */
 .form-control {
 	margin-bottom: 1rem;
 
+	/* Form Labels */
 	& label {
 		display: block;
 		color: #3a3a3a;
@@ -108,6 +119,7 @@ a {
 		margin-bottom: 0.5rem;
 	}
 
+	/* Form inputs */
 	& input {
 		display: block;
 		padding: 0.55rem 0.75rem;
@@ -121,6 +133,81 @@ a {
 			box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 		}
 	}
+
+	&.has-toggle {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+	}
+
+	/* Toggle */
+	& .toggle {
+		display: inline-block;
+		margin-top: 0.2rem;
+
+		& input[type="checkbox"] {
+			opacity: 0;
+			width: 0;
+			height: 0;
+
+			& + label {
+				position: relative;
+				display: inline-block;
+				width: 2.15rem;
+				height: 1.25rem;
+				background-color: var(--color-200);
+				border-radius: 1rem;
+				transition: all 0.25s ease-in-out;
+				cursor: pointer;
+				margin: 0;
+				padding: 0;
+
+				&::after {
+					content: "";
+					position: absolute;
+					top: 0.175rem;
+					left: 0.175rem;
+					height: 0.9rem;
+					aspect-ratio: 1;
+					background-color: var(--color-50);
+					border-radius: 50%;
+					transition: all 0.2s ease-in-out;
+				}
+			}
+
+			&:checked + label {
+				background-color: var(--primary);
+
+				&::after {
+					left: 1.025rem;
+				}
+			}
+
+			&:disabled + label {
+				opacity: 0.5;
+				cursor: not-allowed;
+			}
+
+			&:disabled:checked + label {
+				background-color: var(--color-600);
+			}
+		}
+	}
+
+	& select {
+		background-color: var(--color-50);
+		border: 1px solid var(--outline);
+		border-radius: var(--border-radius);
+		padding: 0.55rem 0.75rem;
+		outline: none;
+		transition: all 0.05s ease-out;
+		appearance: none;
+
+		&:focus {
+			border-color: var(--primary);
+			box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+		}
+	}
 }
 
 form#auth {
@@ -128,22 +215,8 @@ form#auth {
 	max-width: 300px;
 	margin: 0 auto;
 
-	& .form-control {
-		& input {
-			width: 100%;
-		}
-
-		& input[type="checkbox"] {
-			display: inline-block;
-			width: auto;
-			padding: 0;
-			margin: 0 0.5rem 0 0;
-		}
-		& label[for="remember_me"] {
-			display: inline-block;
-			margin: 0;
-			padding: 0;
-		}
+	& input {
+		width: 100%;
 	}
 
 	& button {
@@ -168,7 +241,7 @@ form#auth {
 	gap: 1rem;
 	overflow-x: auto;
 	word-wrap: nowrap;
-	padding: 0.3rem 0;
+	padding: 0.3rem 0.2rem;
 
 	&::-webkit-scrollbar {
 		display: none;
@@ -186,6 +259,10 @@ form#auth {
 		&:hover {
 			background-color: var(--color-100);
 			color: var(--color-900);
+		}
+
+		&:focus {
+			outline: 2px solid var(--color-600);
 		}
 
 		&.active {

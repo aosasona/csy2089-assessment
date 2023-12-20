@@ -59,9 +59,12 @@ render_header("Login");
       <input type="password" name="password" id="password" />
     </div>
 
-    <div class="form-control checkbox">
-      <input type="checkbox" name="remember_me" id="remember_me" />
-      <label for="remember_me">Remember Me</label>
+    <div class="form-control has-toggle">
+      <div class="toggle">
+        <input type="checkbox" name="remember_me" id="remember_me" />
+        <label for="remember_me"></label>
+      </div>
+      <p>Remember me</p>
     </div>
 
     <button name="sign_in" type="submit">Sign In</button>
