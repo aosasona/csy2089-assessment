@@ -134,17 +134,45 @@ a {
 		}
 	}
 
+	& textarea {
+		background-color: var(--color-50);
+		border: 1px solid var(--outline);
+		border-radius: var(--border-radius);
+		padding: 0.55rem 0.75rem;
+		outline: none;
+		transition: all 0.05s ease-out;
+
+		&:focus {
+			border-color: var(--primary);
+			box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+		}
+
+		/* convenient ways to control resizing */
+		&[resize="none"] {
+			resize: none;
+		}
+
+		&[resize="vertical"] {
+			resize: vertical;
+		}
+
+		&[resize="horizontal"] {
+			resize: horizontal;
+		}
+	}
+
 	&.has-toggle {
 		display: flex;
 		align-items: center;
 		gap: 0.5rem;
+
+		& p {
+			margin-top: -0.2rem;
+		}
 	}
 
 	/* Toggle */
 	& .toggle {
-		display: inline-block;
-		margin-top: 0.2rem;
-
 		& input[type="checkbox"] {
 			opacity: 0;
 			width: 0;
@@ -165,8 +193,8 @@ a {
 				&::after {
 					content: "";
 					position: absolute;
-					top: 0.175rem;
-					left: 0.175rem;
+					top: 0.15rem;
+					left: 0.2rem;
 					height: 0.9rem;
 					aspect-ratio: 1;
 					background-color: var(--color-50);
@@ -214,10 +242,6 @@ form#auth {
 	width: 100%;
 	max-width: 300px;
 	margin: 0 auto;
-
-	& input {
-		width: 100%;
-	}
 
 	& button {
 		width: 100%;

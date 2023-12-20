@@ -51,12 +51,12 @@ render_header("Login");
     <?php render_error(); ?>
     <div class="form-control">
       <label for="username">Username</label>
-      <input type="text" name="username" id="username" placeholder="jdoe" />
+      <input type="text" name="username" id="username" placeholder="jdoe" class="w-full" />
     </div>
 
     <div class="form-control">
       <label for="password">Password</label>
-      <input type="password" name="password" id="password" />
+      <input type="password" name="password" id="password" class="w-full" />
     </div>
 
     <div class="form-control has-toggle">

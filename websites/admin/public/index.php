@@ -1,12 +1,12 @@
 <?php
+
 require_once __DIR__ . "/../src/prelude.php";
 
-use Trulyao\Eds\Auth;
+use Trulyao\Eds\Models\Permission;
 use Trulyao\Eds\Models\Product;
 
-if (!Auth::isLoggedIn()) {
-  redirect("/auth.php");
-}
+require_auth();
+ensure_user_can(Permission::Read);
 
 $current_page = $_GET["page"] ?? 1;
 
@@ -32,7 +32,6 @@ render_header("Products");
   <?php if (count($products) === 0) : ?>
     <p class="no-items">No products found</p>
   <?php else : ?>
-    <!-- TODO: definitely create custom css classes -->
     <div class="container">
       <table class="list">
         <thead>

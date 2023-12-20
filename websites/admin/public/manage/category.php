@@ -1,11 +1,14 @@
 <?php
 
+use Trulyao\Eds\Models\Permission;
+
 use Trulyao\Eds\Models\Condition;
 use Trulyao\Eds\Models\Category;
 use Trulyao\Eds\ClientException;
 
 require_once __DIR__ . "/../../src/prelude.php";
 
+require_auth();
 
 $category_id = $_GET["id"] ?? "";
 $action = "create-category";
@@ -13,16 +16,20 @@ if (!empty($category_id)) {
   try {
     $action = "update-category";
     $current_category = Category::findByPK($category_id);
+    if (!$current_category) {
+      throw new ClientException("Category not found");
+    }
   } catch (Exception $e) {
     handle_throwable($e);
     $msg = get_error_message();
-    echo "<script>alert('{$msg}')</script>";
-    redirect("/categories.php");
+    echo "<script>alert('{$msg}'); location.href='/categories.php'</script>";
   }
 }
 
 
 if (isset($_POST["create-category"])) {
+  ensure_user_can(Permission::Write);
+
   try {
     $name = htmlspecialchars($_POST["name"]);
     if (Category::exists(["name" => $name, "slug" => Category::slugify($name)], Condition::OR)) {
@@ -37,7 +44,9 @@ if (isset($_POST["create-category"])) {
   } catch (Exception $e) {
     handle_throwable($e, "/manage/category.php");
   }
-} elseif (isset($_POST["update-category"]) && !empty($current_category)) {
+} elseif (isset($_POST["update-category"])) {
+  ensure_user_can(Permission::Write);
+
   try {
     $current_category->name = htmlspecialchars($_POST["name"]);
     $current_category->save();
@@ -46,6 +55,8 @@ if (isset($_POST["create-category"])) {
     handle_throwable($e, "/create/category.php?id=" . $category_id);
   }
 } elseif (isset($_GET["action"]) && $_GET["action"] === "delete") {
+  ensure_user_can(Permission::Delete);
+
   try {
     if (empty($category_id)) {
       throw new ClientException("Category ID cannot be empty");

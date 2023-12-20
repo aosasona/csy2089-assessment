@@ -15,6 +15,29 @@ function redirect(string $url): void
   exit;
 }
 
+function require_auth(): void
+{
+  if (!Auth::isLoggedIn()) {
+    redirect("/auth.php");
+  }
+}
+
+function ensure_user_can(...$permissions): void
+{
+  if (!Auth::isLoggedIn()) {
+    redirect("/auth.php");
+  } elseif (!Auth::getUser()->can(...$permissions) || !Auth::getUser()->is_admin) {
+    render_header("Unauthorized");
+    echo <<<HTML
+      <main class="container flex flex-center h-half-screen">
+        <p>You are not authorized to access this page or perform this action!</p>
+      </main>
+    HTML;
+    render_footer();
+    exit;
+  }
+}
+
 // Pretty dump
 function dd(...$vars): void
 {

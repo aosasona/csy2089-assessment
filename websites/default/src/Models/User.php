@@ -2,38 +2,6 @@
 
 namespace Trulyao\Eds\Models;
 
-enum Permission: int
-{
-  case Read = 1;
-  case Write = 2;
-  case Delete = 4;
-  case ManageUsers = 8;
-  case All = 15;
-
-  public static function fromValue(int|string $value): Permission
-  {
-    return match ((int)$value) {
-      1 => Permission::Read,
-      2 => Permission::Write,
-      4 => Permission::Delete,
-      8 => Permission::ManageUsers,
-      15 => Permission::All,
-      default => throw new \Exception("Invalid permission value"),
-    };
-  }
-  /**
-   * @param array<int,mixed> $values
-   */
-  public static function fromMultiple(array $values): Permission
-  {
-    $value = 0;
-    foreach ($values as $v) {
-      $value |= (int)$v;
-    }
-    return Permission::from($value);
-  }
-}
-
 
 class User extends BaseModel
 {
@@ -56,8 +24,14 @@ class User extends BaseModel
     return $this->{$name};
   }
 
-  public function can(Permission $permission): bool
+  public function can(Permission ...$permissions): bool
   {
-    return ($this->perm & $permission->value) === $permission->value;
+    foreach ($permissions as $p) {
+      if (!($this->perm & $p->value)) {
+        return false;
+      }
+    }
+
+    return true;
   }
 }

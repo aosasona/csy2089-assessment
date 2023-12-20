@@ -14,6 +14,14 @@
 	width: 50%;
 }
 
+.h-1\/2 {
+	height: 50%;
+}
+
+.h-half-screen {
+	height: 50vh;
+}
+
 .flex {
 	display: flex;
 }
@@ -27,8 +35,16 @@
 	justify-content: center;
 }
 
+.justify-center {
+	justify-content: center;
+}
+
 .justify-end {
 	justify-content: flex-end;
+}
+
+.justify-between {
+	justify-content: space-between;
 }
 
 .mx-auto {
@@ -44,8 +60,12 @@
 	margin-top: 1rem;
 }
 
+.mt-8 {
+	margin-top: 2rem;
+}
+
 .container {
-	max-width: 95%;
+	max-width: 90%;
 	margin: 0 auto;
 }
 
@@ -82,6 +102,12 @@
 
 	.md\:w-full {
 		width: 100%;
+	}
+
+	.md\:dual-pane {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		grid-gap: 1.5rem;
 	}
 }
 
