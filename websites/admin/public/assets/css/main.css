@@ -132,9 +132,14 @@ a {
 			border-color: var(--primary);
 			box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 		}
+
+		&[type="number"]::-webkit-inner-spin-button {
+			-webkit-appearance: none;
+		}
 	}
 
 	& textarea {
+		font-family: "Inter", sans-serif;
 		background-color: var(--color-50);
 		border: 1px solid var(--outline);
 		border-radius: var(--border-radius);
@@ -178,7 +183,7 @@ a {
 			width: 0;
 			height: 0;
 
-			& + label {
+			&+label {
 				position: relative;
 				display: inline-block;
 				width: 2.15rem;
@@ -203,7 +208,7 @@ a {
 				}
 			}
 
-			&:checked + label {
+			&:checked+label {
 				background-color: var(--primary);
 
 				&::after {
@@ -211,12 +216,12 @@ a {
 				}
 			}
 
-			&:disabled + label {
+			&:disabled+label {
 				opacity: 0.5;
 				cursor: not-allowed;
 			}
 
-			&:disabled:checked + label {
+			&:disabled:checked+label {
 				background-color: var(--color-600);
 			}
 		}
@@ -255,6 +260,7 @@ form#auth {
 		padding: 0.75rem 0;
 		text-align: right;
 	}
+
 	& b {
 		color: var(--color-900);
 	}
@@ -311,7 +317,8 @@ form#auth {
 	margin-block: 3rem;
 }
 
-.container > table {
+.list-container {
+	width: 100%;
 	position: relative;
 	overflow-x: auto;
 }
@@ -350,6 +357,13 @@ table.list {
 			& td {
 				padding: 0.6rem 0.8rem;
 
+				& img {
+					width: 2.5rem;
+					aspect-ratio: 1;
+					border-radius: var(--border-radius);
+					object-fit: cover;
+				}
+
 				&.actions {
 					white-space: nowrap;
 					padding: 0.6rem 0.8rem;
@@ -373,7 +387,7 @@ table.list {
 					}
 
 					& i {
-						font-size: 1rem;
+						font-size: 1.25rem;
 					}
 
 					& span {
@@ -381,6 +395,50 @@ table.list {
 					}
 				}
 			}
+		}
+	}
+}
+
+.pagination {
+	display: flex;
+	gap: 0.8rem;
+	justify-content: center;
+	align-items: center;
+
+	& .previous,
+	& .next {
+		-webkit-font-smoothing: antialiased;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 33px;
+		aspect-ratio: 1;
+		font-size: 1.25rem;
+		color: var(--color-600);
+		border-radius: var(--border-radius);
+
+		&:hover {
+			color: var(--color-900);
+			background-color: var(--color-100);
+		}
+	}
+
+	& .page-input {
+		width: 40px;
+		color: var(--color-700);
+		text-align: center;
+		padding-block: 0.5rem;
+		background-color: var(--color-50);
+		border: 1px solid var(--color-200);
+		border-radius: var(--border-radius);
+
+		&:focus {
+			outline: 2px solid var(--color-900);
+		}
+
+		&:disabled {
+			opacity: 0.5;
+			cursor: not-allowed;
 		}
 	}
 }

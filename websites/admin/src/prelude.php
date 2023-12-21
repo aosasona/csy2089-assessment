@@ -111,3 +111,8 @@ function validate_post_regex($name, $regex)
     ["options" => ["regexp" => $regex]]
   );
 }
+
+function get_full_product_image_path($image_name)
+{
+  return "../../../default/public/images/products/" . $image_name;
+}

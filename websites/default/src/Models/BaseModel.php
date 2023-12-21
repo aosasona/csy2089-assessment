@@ -94,6 +94,16 @@ abstract class BaseModel
     return $stmt->fetchAll() ?: [];
   }
 
+  public static function paginateWithQuery(string $sql, int $page, int $limit = 50): array
+  {
+    $offset = ($page - 1) * $limit;
+    $sql = "{$sql} LIMIT {$limit} OFFSET {$offset}";
+    $stmt = self::getConnection()->prepare($sql);
+    $stmt->execute();
+    $stmt->setFetchMode(PDO::FETCH_ASSOC);
+    return $stmt->fetchAll() ?: [];
+  }
+
   public static function getPageCount(int $limit = 50): int
   {
     $count = self::count();
@@ -238,7 +248,7 @@ abstract class BaseModel
   public function merge(self $model): self
   {
     foreach ($this->getAttributes() as $attr) {
-      if ($model->{$attr} !== null) {
+      if (isset($model->{$attr}) && $model->{$attr} !== null && $attr !== self::getPrimaryKeyColumn() && $model->{$attr} !== $this->{$attr}) {
         $this->{$attr} = $model->{$attr};
       }
     }

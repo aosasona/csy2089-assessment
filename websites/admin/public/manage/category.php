@@ -1,5 +1,7 @@
 <?php
 
+use Trulyao\Eds\Utils;
+
 use Trulyao\Eds\Models\Permission;
 
 use Trulyao\Eds\Models\Condition;
@@ -31,7 +33,7 @@ if (isset($_POST["create-category"])) {
     ensure_user_can(Permission::Write);
 
     $name = htmlspecialchars($_POST["name"]);
-    if (Category::exists(["name" => $name, "slug" => Category::slugify($name)], Condition::OR)) {
+    if (Category::exists(["name" => $name, "slug" => Utils::slugify($name)], Condition::OR)) {
       throw new ClientException("Category `{$name}` already exists");
     }
 
