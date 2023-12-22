@@ -107,6 +107,10 @@ a {
 	margin-bottom: 1rem;
 }
 
+input[type="number"]::-webkit-inner-spin-button {
+	-webkit-appearance: none;
+}
+
 /* Forms */
 .form-control {
 	margin-bottom: 1rem;
@@ -131,10 +135,6 @@ a {
 		&:focus {
 			border-color: var(--primary);
 			box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-		}
-
-		&[type="number"]::-webkit-inner-spin-button {
-			-webkit-appearance: none;
 		}
 	}
 
@@ -186,8 +186,8 @@ a {
 			&+label {
 				position: relative;
 				display: inline-block;
-				width: 2.15rem;
-				height: 1.25rem;
+				width: 34px;
+				height: 20px;
 				background-color: var(--color-200);
 				border-radius: 1rem;
 				transition: all 0.25s ease-in-out;
@@ -198,13 +198,16 @@ a {
 				&::after {
 					content: "";
 					position: absolute;
-					top: 0.18rem;
-					left: 0.2rem;
-					height: 0.9rem;
+					top: 3px;
+					bottom: 3px;
+					left: 3px;
+					height: 14px;
 					aspect-ratio: 1;
 					background-color: var(--color-50);
 					border-radius: 50%;
 					transition: all 0.2s ease-in-out;
+					margin: 0;
+					padding: 0;
 				}
 			}
 
@@ -212,7 +215,7 @@ a {
 				background-color: var(--primary);
 
 				&::after {
-					left: 1.025rem;
+					left: 17px;
 				}
 			}
 

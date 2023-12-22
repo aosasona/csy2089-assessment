@@ -63,7 +63,8 @@ CREATE TABLE IF NOT EXISTS ratings (
 CREATE TABLE IF NOT EXISTS enquiries (
   id int(11) NOT NULL AUTO_INCREMENT,
   product_id int(11) NOT NULL,
-  user_id int(11), -- nullable for anonymous (AKA guest) users
+  asked_by int(11), -- nullable for anonymous (AKA guest) users
+  answered_by int(11), -- nullable until answered
   question text NOT NULL,
   answer text, -- null until answered
   is_published tinyint(1) NOT NULL DEFAULT '0',
@@ -71,7 +72,8 @@ CREATE TABLE IF NOT EXISTS enquiries (
   last_updated_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (id),
   FOREIGN KEY (product_id) REFERENCES products(id),
-  FOREIGN KEY (user_id) REFERENCES users(id) 
+  FOREIGN KEY (asked_by) REFERENCES users(id),
+  FOREIGN KEY (answered_by) REFERENCES users(id)
 );
 
 -- default admin user

@@ -6,10 +6,10 @@ use Trulyao\Eds\Auth;
 use Trulyao\Eds\Models\Permission;
 use Trulyao\Eds\Models\Product;
 
-define("PAGE_SIZE", 50);
-
 require_auth();
 ensure_user_can(Permission::Read);
+
+define("PAGE_SIZE", 50);
 
 $current_page = $_GET["page"] ?? 1;
 
@@ -43,6 +43,7 @@ render_header("Products");
             <th scope="col">Product name</th>
             <th scope="col">Description</th>
             <th scope="col">Category</th>
+            <th scope="col">Manufacturer</th>
             <th scope="col">Price</th>
             <th scope="col">Published</th>
             <th scope="col">Featured</th>
@@ -65,6 +66,9 @@ render_header("Products");
               </td>
               <td>
                 <?php echo $product['category_name'] ?>
+              </td>
+              <td>
+                <?php echo $product['manufacturer'] ?>
               </td>
               <td>
                 £<?php echo number_format($product['price'] / 100, 2) ?>
@@ -100,23 +104,7 @@ render_header("Products");
       </table>
     </div>
 
-    <?php if (count($products) > 0) : ?>
-      <center class="mt-8">
-        <div class="pagination">
-          <?php if ($current_page > 1) : ?>
-            <a href="/manage/products.php?page=<?php echo $current_page - 1 ?>" class="previous"><i class="ti ti-chevron-left"></i></a>
-          <?php endif; ?>
-
-          <form>
-            <input type="number" name="page" value="<?php echo $current_page ?>" class="page-input" <?php echo $total_products < PAGE_SIZE ? "disabled" : "" ?> />
-          </form>
-
-          <?php if ($current_page * PAGE_SIZE < $total_products) : ?>
-            <a href="/manage/products.php?page=<?php echo $current_page + 1 ?>" class="next"><i class="ti ti-chevron-right"></i></a>
-          <?php endif; ?>
-        </div>
-      </center>
-    <?php endif; ?>
+    <?php render_pagination(count($products), $total_products, $current_page); ?>
 
   <?php endif; ?>
 </main>

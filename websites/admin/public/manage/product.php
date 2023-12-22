@@ -3,10 +3,8 @@
 require_once __DIR__ . "/../../src/prelude.php";
 
 use Rakit\Validation\Validation;
-use Trulyao\Eds\Utils;
-
-
 use Rakit\Validation\Validator;
+use Trulyao\Eds\Utils;
 use Trulyao\Eds\Auth;
 use Trulyao\Eds\ClientException;
 use Trulyao\Eds\Models\Category;
@@ -43,6 +41,7 @@ function make_validator(): Validation
       "category_id" => "required|numeric",
       "description" => "min:3|max:8192",
       "image" => "uploaded_file:0,750K,png,jpeg,jpg",
+      "manufacturer" => "min:2|max:96",
     ]
   );
   $validation->setAliases(
@@ -84,15 +83,15 @@ if (isset($_POST["add-product"])) {
 
     $is_listed = (int) isset($_POST["is_listed"]) && $_POST["is_listed"] === "on";
     $is_featured = (int) isset($_POST["is_featured"]) && $_POST["is_featured"] === "on";
-    $price_as_penies = intval($_POST["price"] * 100);
 
     $product = new Product();
-    $product->name = htmlspecialchars($_POST["name"]);
+    $product->name = $_POST["name"];
     $product->public_id = Utils::slugify($product->name) . "-" . substr(time(), 0, 6);
-    $product->description = htmlspecialchars($_POST["description"]);
-    $product->price = $price_as_penies;
+    $product->description = $_POST["description"];
+    $product->price = intval($_POST["price"] * 100);
+    $product->manufacturer = $_POST["manufacturer"];
     $product->image_name = $filename;
-    $product->category_id = intval($_POST["category_id"]);
+    $product->category_id = (int) $_POST["category_id"];
     $product->is_listed = $is_listed;
     $product->is_featured = $is_featured;
     $product->listed_by = Auth::getUser()->id;
@@ -146,18 +145,15 @@ if (isset($_POST["add-product"])) {
       $filename = $current_product->image_name;
     }
 
-    $is_listed = (int) isset($_POST["is_listed"]) && $_POST["is_listed"] === "on";
-    $is_featured = (int) isset($_POST["is_featured"]) && $_POST["is_featured"] === "on";
-    $price_as_penies = intval($_POST["price"] * 100);
-
     $product = new Product();
-    $product->name = htmlspecialchars($_POST["name"]);
-    $product->description = htmlspecialchars($_POST["description"]);
-    $product->price = $price_as_penies;
+    $product->name = $_POST["name"];
+    $product->description = $_POST["description"];
+    $product->manufacturer = $_POST["manufacturer"];
+    $product->price = intval($_POST["price"] * 100);
     $product->image_name = $filename;
     $product->category_id = intval($_POST["category_id"]);
-    $product->is_listed = $is_listed;
-    $product->is_featured = $is_featured;
+    $product->is_listed = (int) isset($_POST["is_listed"]) && $_POST["is_listed"] === "on";
+    $product->is_featured = (int) isset($_POST["is_featured"]) && $_POST["is_featured"] === "on";
     $product = $current_product->merge($product);
     $product->save();
 
@@ -242,6 +238,11 @@ render_header("New product");
   </div>
 
   <div>
+    <div class="form-control">
+      <label for="manufacturer">Manufacturer</label>
+      <input type="text" name="manufacturer" id="manufacturer" placeholder="Anker" class="w-full" value="<?php echo $current_product?->manufacturer ?? '' ?>" />
+    </div>
+
     <div class="form-control">
       <label for="description">Description</label>
       <textarea name="description" id="description" rows="12" resize="vertical" class="w-full"><?php echo $current_product?->description ?? '' ?></textarea>

@@ -1,6 +1,5 @@
 <?php
 
-
 require_once __DIR__ . "/../src/prelude.php";
 
 use Trulyao\Eds\Auth;
@@ -28,7 +27,7 @@ if (isset($_POST['sign_in'])) {
 
     $user = User::findBy("username", $username);
 
-    if (!$user || !password_verify($password, $user->password)) {
+    if (!$user || !$user->verifyPassword($password)) {
       throw new ClientException("Invalid username or password");
     }
 

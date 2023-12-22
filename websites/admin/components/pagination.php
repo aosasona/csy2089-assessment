@@ -1,16 +1,25 @@
-<nav class="pagination">
-  <ul class="inline-flex -space-x-px text-sm">
-    <li>
-      <a href="#" class="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-e-0 border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700">Previous</a>
-    </li>
-    <li>
-      <a href="#" class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700">1</a>
-    </li>
-    <li>
-      <a href="#" class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700">2</a>
-    </li>
-    <li>
-      <a href="#" class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700">Next</a>
-    </li>
-  </ul>
-</nav>
+<?php
+
+/**
+ * @var int $current_count - the number of items on the current page
+ * @var int $total_count - the total number of items
+ * @var int $current_page - the current page number
+ */
+?>
+<?php if ($current_count > 0 && $current_page <= 1) : ?>
+  <center class="mt-8">
+    <div class="pagination">
+      <?php if ($current_page > 1) : ?>
+        <a href="?page=<?php echo $current_page - 1 ?>" class="previous"><i class="ti ti-chevron-left"></i></a>
+      <?php endif; ?>
+
+      <form>
+        <input type="number" name="page" value="<?php echo $current_page ?>" class="page-input" <?php echo $total_count < PAGE_SIZE ? "disabled" : "" ?> />
+      </form>
+
+      <?php if ($current_page * PAGE_SIZE < $total_count) : ?>
+        <a href="?page=<?php echo $current_page + 1 ?>" class="next"><i class="ti ti-chevron-right"></i></a>
+      <?php endif; ?>
+    </div>
+  </center>
+<?php endif; ?>

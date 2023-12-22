@@ -102,14 +102,9 @@ function render_error()
   }
 }
 
-function validate_post_regex($name, $regex)
+function render_pagination(int $current_count, int $total_count, int $current_page): void
 {
-  return filter_input(
-    INPUT_POST,
-    $name,
-    FILTER_VALIDATE_REGEXP,
-    ["options" => ["regexp" => $regex]]
-  );
+  include_once __DIR__ . "/../components/pagination.php";
 }
 
 function get_full_product_image_path($image_name)

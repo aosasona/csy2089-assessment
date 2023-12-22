@@ -37,7 +37,7 @@ CREATE TABLE `categories` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `uq_name` (`name`),
   UNIQUE KEY `uq_slug` (`slug`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -46,7 +46,7 @@ CREATE TABLE `categories` (
 
 LOCK TABLES `categories` WRITE;
 /*!40000 ALTER TABLE `categories` DISABLE KEYS */;
-INSERT INTO `categories` VALUES (1,'Console','console'),(3,'Monitors','monitors');
+INSERT INTO `categories` VALUES (3,'Monitors','monitors'),(5,'Chargers','chargers'),(6,'Consoles','consoles');
 /*!40000 ALTER TABLE `categories` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -60,7 +60,8 @@ DROP TABLE IF EXISTS `enquiries`;
 CREATE TABLE `enquiries` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `product_id` int(11) NOT NULL,
-  `user_id` int(11) DEFAULT NULL,
+  `asked_by` int(11) DEFAULT NULL,
+  `answered_by` int(11) DEFAULT NULL,
   `question` text NOT NULL,
   `answer` text DEFAULT NULL,
   `is_published` tinyint(1) NOT NULL DEFAULT 0,
@@ -68,9 +69,11 @@ CREATE TABLE `enquiries` (
   `last_updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   PRIMARY KEY (`id`),
   KEY `product_id` (`product_id`),
-  KEY `user_id` (`user_id`),
+  KEY `asked_by` (`asked_by`),
+  KEY `answered_by` (`answered_by`),
   CONSTRAINT `enquiries_ibfk_1` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`),
-  CONSTRAINT `enquiries_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
+  CONSTRAINT `enquiries_ibfk_2` FOREIGN KEY (`asked_by`) REFERENCES `users` (`id`),
+  CONSTRAINT `enquiries_ibfk_3` FOREIGN KEY (`answered_by`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -103,13 +106,14 @@ CREATE TABLE `products` (
   `listed_by` int(11) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `last_updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `manufacturer` varchar(255) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `uq_public_id` (`public_id`),
   KEY `category_id` (`category_id`),
   KEY `listed_by` (`listed_by`),
   CONSTRAINT `products_ibfk_1` FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`),
   CONSTRAINT `products_ibfk_2` FOREIGN KEY (`listed_by`) REFERENCES `users` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -118,6 +122,7 @@ CREATE TABLE `products` (
 
 LOCK TABLES `products` WRITE;
 /*!40000 ALTER TABLE `products` DISABLE KEYS */;
+INSERT INTO `products` VALUES (5,'lenovo-24-inch-monitor-170319','Lenovo 24-inch LED monitor',10999,'Testing stuff here again','prod_6584caf31c11d.jpg',3,1,1,1,'2023-12-21 22:17:19','2023-12-22 21:16:36','Lenovo'),(6,'category-170319','20W Anker Charger',4499,'Charger testing updated','prod_6584caeb61cf9.JPG',5,1,1,1,'2023-12-21 22:21:25','2023-12-22 21:20:00','Anker'),(8,'apple-studio-display-27-170328','Apple Studio Display 27&quot;',149900,'This is a test apple monitor','prod_6586002758aae.PNG',3,1,1,1,'2023-12-22 21:28:19','2023-12-22 21:31:19','Apple'),(10,'dell-27-monitor-170328','Dell 27&quot; Monitor',20999,'This is another test monitor','prod_658600510a041.JPG',3,1,0,1,'2023-12-22 21:32:01','2023-12-22 21:32:01','Dell');
 /*!40000 ALTER TABLE `products` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -182,7 +187,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'John','Doe','admin','$2y$10$WZrQgcRceAnL298aGjgaJuA4ib0TPr0WKpXMo8Luq52ZxSht6Xu4K','admin@v.je',1,15,'2023-12-09 23:50:15','2023-12-10 15:56:02');
+INSERT INTO `users` VALUES (1,'John','Doe','admin','$2y$10$IE.pn7Ctvx42sYHRfFik/e.Kp1VoXUqr8wY6sOHwd14dIzRvHH8xK','admin@v.je',1,15,'2023-12-09 23:50:15','2023-12-22 22:26:34');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 

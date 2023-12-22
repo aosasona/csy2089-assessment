@@ -16,12 +16,6 @@ abstract class BaseModel
 {
   private PDO $db;
 
-  public  const OR = "OR";
-  public const AND = "AND";
-
-  /**
-   * @throws \Exception
-   */
   public function __construct(?Database $instance = null)
   {
     if (!empty($instance)) {
@@ -36,9 +30,6 @@ abstract class BaseModel
     return self::pluralize(strtolower((new \ReflectionClass(static::class))->getShortName()));
   }
 
-  /**
-   * @param array<int,mixed> $filters
-   */
   public static function exists(array $filters, Condition $condition = Condition::AND): bool
   {
     $where_parts = [];
@@ -81,26 +72,28 @@ abstract class BaseModel
     $stmt->setFetchMode(PDO::FETCH_CLASS, static::class);
     return $stmt->fetch() ?: null;
   }
-  /**
-   * @return array|bool
-   */
+
   public static function paginate(int $page, int $limit = 50): array
   {
     $offset = ($page - 1) * $limit;
     $sql = "SELECT * FROM " . self::getTableName() . " LIMIT {$limit} OFFSET {$offset}";
     $stmt = self::getConnection()->prepare($sql);
     $stmt->execute();
-    $stmt->setFetchMode(\PDO::FETCH_CLASS, static::class);
+    $stmt->setFetchMode(PDO::FETCH_CLASS, static::class);
     return $stmt->fetchAll() ?: [];
   }
 
-  public static function paginateWithQuery(string $sql, int $page, int $limit = 50): array
+  public static function paginateWithQuery(string $sql, int $page, int $limit = 50, bool $as_object = false): array
   {
     $offset = ($page - 1) * $limit;
     $sql = "{$sql} LIMIT {$limit} OFFSET {$offset}";
     $stmt = self::getConnection()->prepare($sql);
     $stmt->execute();
-    $stmt->setFetchMode(PDO::FETCH_ASSOC);
+    if ($as_object) {
+      $stmt->setFetchMode(PDO::FETCH_CLASS, static::class);
+    } else {
+      $stmt->setFetchMode(PDO::FETCH_ASSOC);
+    }
     return $stmt->fetchAll() ?: [];
   }
 
@@ -110,19 +103,14 @@ abstract class BaseModel
     return ceil($count / $limit);
   }
 
-  /**
-   * @param  array<int,mixed> $params
-   * @return array|bool
-   */
   public static function query(string $sql, array $params = []): array
   {
     $stmt = self::getConnection()->prepare($sql);
     $stmt->execute($params);
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    return $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
   }
 
   /**
-   * @param       array<int,mixed> $params
    * @description an escape hatch for executing raw sql queries
    */
   public static function execute(string $sql, array $params = []): bool
@@ -130,9 +118,7 @@ abstract class BaseModel
     $stmt = self::getConnection()->prepare($sql);
     return $stmt->execute($params);
   }
-  /**
-   * @return array|bool
-   */
+
   public static function all(): array
   {
     $sql = "SELECT * FROM " . self::getTableName();
@@ -141,10 +127,7 @@ abstract class BaseModel
     $stmt->setFetchMode(\PDO::FETCH_CLASS, static::class);
     return $stmt->fetchAll();
   }
-  /**
-   * @param  array<int,mixed> $params
-   * @return array|bool
-   */
+
   public static function where(string $expr, array $params): array
   {
     $sql = "SELECT * FROM " . self::getTableName() . " WHERE {$expr}";
@@ -160,10 +143,14 @@ abstract class BaseModel
     return self::getConnection()->lastInsertId();
   }
 
-  public static function count(): int
+  public static function count(?string $where = null, ?array $params = []): int
   {
-    $stmt = self::getConnection()->prepare("SELECT COUNT(*) FROM " . self::getTableName());
-    $stmt->execute();
+    $sql = "SELECT COUNT(*) FROM " . self::getTableName();
+    if (!empty($where)) {
+      $sql .= " WHERE {$where}";
+    }
+    $stmt = self::getConnection()->prepare($sql);
+    $stmt->execute($params);
     return $stmt->fetchColumn();
   }
 

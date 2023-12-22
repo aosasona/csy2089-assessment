@@ -35,7 +35,7 @@ function render_nav_link(string $url, string $text, array $matches = []): void
     render_nav_link("/categories.php", "Categories", ["manage/category.php"]);
     render_nav_link("/enquiries.php", "Enquiries");
     if ($user->can(Permission::ManageUsers)) {
-      render_nav_link("/manage-users.php", "Manage users");
+      render_nav_link("/manage_users.php", "Manage users");
     }
     render_nav_link("/account.php", "Account");
     ?>
