@@ -198,7 +198,7 @@ a {
 				&::after {
 					content: "";
 					position: absolute;
-					top: 0.15rem;
+					top: 0.18rem;
 					left: 0.2rem;
 					height: 0.9rem;
 					aspect-ratio: 1;
