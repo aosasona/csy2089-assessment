@@ -1,5 +1,6 @@
 <?php
 
+require_once __DIR__ . "/../../src/prelude.php";
 
 use Rakit\Validation\Validation;
 use Trulyao\Eds\Utils;
@@ -12,7 +13,6 @@ use Trulyao\Eds\Models\Category;
 use Trulyao\Eds\Models\Permission;
 use Trulyao\Eds\Models\Product;
 
-require_once __DIR__ . "/../../src/prelude.php";
 
 require_auth();
 
@@ -171,6 +171,9 @@ if (isset($_POST["add-product"])) {
     if (empty($product_id)) {
       throw new ClientException("Malformed request, product ID is missing");
     }
+
+    $current_product->delete();
+    redirect("/");
   } catch (Exception $e) {
     handle_throwable($e);
     js_redirect("/", get_error_message());

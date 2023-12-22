@@ -287,6 +287,22 @@ abstract class BaseModel
     return $values;
   }
 
+  // NOTE: For debugging
+  public function toJSON(): string
+  {
+    return json_encode($this->getValues(), JSON_PRETTY_PRINT);
+  }
+
+  // NOTE: For debugging
+  public function fromJSON(string $json): self
+  {
+    $data = json_decode($json, true);
+    foreach ($data as $key => $value) {
+      $this->{$key} = $value;
+    }
+    return $this;
+  }
+
   // Only to be used in static methods
   protected static function getConnection(): PDO
   {
