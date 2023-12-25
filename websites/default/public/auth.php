@@ -1,9 +1,8 @@
 <?php
 
-use Trulyao\Eds\Models\User;
-
 require_once __DIR__ . "/../src/prelude.php";
 
+use Trulyao\Eds\Models\User;
 use Trulyao\Eds\Auth;
 
 

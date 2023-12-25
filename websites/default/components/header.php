@@ -40,6 +40,7 @@ $categories = Category::all();
       <?php if (!Auth::isLoggedIn()) : ?>
         <li><a href="/auth.php">Sign In</a></li>
       <?php else : ?>
+        <li><a href="/enquiries.php">View Enquiries</a></li>
         <li><a href="/auth.php?logout">Sign Out</a></li>
       <?php endif; ?>
     </ul>

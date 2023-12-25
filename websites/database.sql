@@ -74,7 +74,7 @@ CREATE TABLE `enquiries` (
   CONSTRAINT `enquiries_ibfk_1` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`),
   CONSTRAINT `enquiries_ibfk_2` FOREIGN KEY (`asked_by`) REFERENCES `users` (`id`),
   CONSTRAINT `enquiries_ibfk_3` FOREIGN KEY (`answered_by`) REFERENCES `users` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -83,7 +83,7 @@ CREATE TABLE `enquiries` (
 
 LOCK TABLES `enquiries` WRITE;
 /*!40000 ALTER TABLE `enquiries` DISABLE KEYS */;
-INSERT INTO `enquiries` VALUES (1,8,NULL,1,'Does it support HDMI?','Yes, it does.',1,'2023-12-25 20:57:49','2023-12-25 20:59:41'),(2,8,2,1,'Can I VESA-mount instead?\r\n','Yes, although you would need to buy a version that comes with the VESA adaptor',1,'2023-12-25 20:58:45','2023-12-25 20:59:34');
+INSERT INTO `enquiries` VALUES (1,8,NULL,1,'Does it support HDMI?','Yes, it does.',1,'2023-12-25 20:57:49','2023-12-25 20:59:41'),(2,8,2,1,'Can I VESA-mount instead?\r\n','Yes, although you would need to buy a version that comes with the VESA adaptor',1,'2023-12-25 20:58:45','2023-12-25 20:59:34'),(4,6,2,NULL,'Is this a GaN charger?',NULL,0,'2023-12-25 22:28:42','2023-12-25 22:28:42');
 /*!40000 ALTER TABLE `enquiries` ENABLE KEYS */;
 UNLOCK TABLES;
 
