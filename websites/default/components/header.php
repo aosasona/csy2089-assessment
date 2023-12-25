@@ -1,5 +1,6 @@
 <?php
 
+use Trulyao\Eds\Auth;
 use Trulyao\Eds\Models\Category;
 
 /**
@@ -36,6 +37,11 @@ $categories = Category::all();
           <?php endforeach; ?>
         </ul>
       </li>
+      <?php if (!Auth::isLoggedIn()) : ?>
+        <li><a href="/auth.php">Sign In</a></li>
+      <?php else : ?>
+        <li><a href="/auth.php?logout">Sign Out</a></li>
+      <?php endif; ?>
     </ul>
 
     <address>

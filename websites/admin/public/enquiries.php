@@ -79,22 +79,23 @@ render_header("Enquiries");
 ?>
 
 <main class="mt-4">
+  <div class="flex justify-end">
+    <form method="get">
+      <div class="form-control has-toggle">
+        <div class="toggle">
+          <input type="checkbox" name="show_unanswered" id="show_unanswered" onchange="this.form.submit()" <?php echo $show_unanswered ? "checked" : "" ?> />
+          <label for="show_unanswered"></label>
+        </div>
+        <p>Show unanswered <b>ONLY</b></p>
+      </div>
+    </form>
+  </div>
+
   <?php if (empty($enquiries)) : ?>
     <div class="no-items">
       <p>There are no enquiries.</p>
     </div>
   <?php else : ?>
-    <div class="flex justify-end">
-      <form method="get">
-        <div class="form-control has-toggle">
-          <div class="toggle">
-            <input type="checkbox" name="show_unanswered" id="show_unanswered" onchange="this.form.submit()" <?php echo $show_unanswered ? "checked" : "" ?> />
-            <label for="show_unanswered"></label>
-          </div>
-          <p>Show unanswered <b>ONLY</b></p>
-        </div>
-      </form>
-    </div>
 
     <ul class="enquiries">
       <?php render_error(); ?>

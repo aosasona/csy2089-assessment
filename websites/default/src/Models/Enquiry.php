@@ -29,7 +29,7 @@ final class Enquiry extends BaseModel
     $sql = "SELECT 
     e.*, u.`first_name`, u.`last_name`, u.`username`
     FROM `enquiries` e 
-    LEFT JOIN `users` u ON u.`id` = e.`id` 
+    LEFT JOIN `users` u ON u.`id` = e.`asked_by` 
     WHERE e.`product_id` = :product_id AND e.`is_published` = 1 
     ORDER BY e.`created_at` DESC";
 

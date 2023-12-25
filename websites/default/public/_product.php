@@ -88,7 +88,7 @@ render_header($product->name . " | Ed's Electronics");
             <strong>
               <?php
               $name = $enquiry["first_name"] . " " . $enquiry["last_name"];
-              echo $name ?: $enquiry["username"] ?: "Anonymous"
+              echo trim($name) ?: $enquiry["username"] ?: "Anonymous";
               ?>
             </strong>
             <em>
