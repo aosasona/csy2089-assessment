@@ -25,7 +25,7 @@ if (isset($_POST['sign_in'])) {
       throw new ClientException("Password is required");
     }
 
-    $user = User::findBy("username", $username);
+    $user = User::findOneBy("username", $username);
 
     if (!$user || !$user->verifyPassword($password)) {
       throw new ClientException("Invalid username or password");

@@ -48,18 +48,6 @@ CREATE TABLE IF NOT EXISTS products (
   FOREIGN KEY (listed_by) REFERENCES users(id) 
 );
 
-CREATE TABLE IF NOT EXISTS ratings (
-  id int(11) NOT NULL AUTO_INCREMENT,
-  product_id int(11) NOT NULL,
-  user_id int(11) NOT NULL,
-  rating int(2) NOT NULL,
-  created_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  last_updated_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (id),
-  FOREIGN KEY (product_id) REFERENCES products(id),
-  FOREIGN KEY (user_id) REFERENCES users(id)
-);
-
 CREATE TABLE IF NOT EXISTS enquiries (
   id int(11) NOT NULL AUTO_INCREMENT,
   product_id int(11) NOT NULL,

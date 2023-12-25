@@ -31,7 +31,8 @@ if (isset($_POST["change-password"])) {
       throw new ClientException("New password and confirm password do not match");
     }
 
-    $user->updatePassword($new_password);
+    $user->setPassword($new_password);
+    $user->save();
 
     redirect("/account.php");
   } catch (Exception $e) {

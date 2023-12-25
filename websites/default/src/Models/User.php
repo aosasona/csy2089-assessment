@@ -2,6 +2,8 @@
 
 namespace Trulyao\Eds\Models;
 
+use Override;
+
 
 class User extends BaseModel
 {
@@ -10,8 +12,8 @@ class User extends BaseModel
   public string $first_name;
   public string $last_name;
   public string $username;
-  private string $password;
-  public bool $is_admin;
+  protected string $password;
+  public int $is_admin;
   public int $perm;
   public string $created_at;
   public string $last_updated_at;
@@ -52,9 +54,19 @@ class User extends BaseModel
     return password_verify($password, $this->password);
   }
 
-  public function updatePassword(string $password): void
+  #[Override]
+  public function save(): bool
   {
-    $this->setPassword($password);
-    $this->query("UPDATE `users` SET `password` = ? WHERE `id` = ?", [$this->password, $this->id]);
+    $this->first_name = ucwords(strtolower(trim($this->first_name)));
+    $this->last_name = ucwords(strtolower(trim($this->last_name)));
+    $this->username = strtolower(trim($this->username));
+    return parent::save();
+  }
+
+  public function makeUsername(): string
+  {
+    $username = strtolower(substr(trim($this->first_name), 0, 1) . trim($this->last_name));
+    $username = preg_replace("/[^a-z0-9]/", "", $username); // remove non-alphanumeric characters
+    return $username;
   }
 }

@@ -28,4 +28,9 @@ class Product extends BaseModel
     $this->manufacturer = ucwords(strtolower(htmlspecialchars($this->manufacturer)));
     return parent::save();
   }
+
+  public function getPriceAsCurrency(string $currency = "£"): string
+  {
+    return $currency . number_format($this->price / 100, 2);
+  }
 }

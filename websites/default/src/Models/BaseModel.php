@@ -60,7 +60,20 @@ abstract class BaseModel
     return $stmt->fetch() ?: null;
   }
 
-  public static function findBy(string $column, mixed $value): ?self
+  public static function findOneBy(string $column, mixed $value): ?self
+  {
+    if (!property_exists(static::class, $column)) {
+      throw new \Exception("Column {$column} does not exist on this model (" . self::getTableName() . ")");
+    }
+
+    $sql = "SELECT * FROM " . self::getTableName() . " WHERE {$column} = ? LIMIT 1";
+    $stmt = self::getConnection()->prepare($sql);
+    $stmt->execute([$value]);
+    $stmt->setFetchMode(PDO::FETCH_CLASS, static::class);
+    return $stmt->fetch() ?: null;
+  }
+
+  public static function findManyBy(string $column, mixed $value): array
   {
     if (!property_exists(static::class, $column)) {
       throw new \Exception("Column {$column} does not exist on this model (" . self::getTableName() . ")");
@@ -70,25 +83,29 @@ abstract class BaseModel
     $stmt = self::getConnection()->prepare($sql);
     $stmt->execute([$value]);
     $stmt->setFetchMode(PDO::FETCH_CLASS, static::class);
-    return $stmt->fetch() ?: null;
+    return $stmt->fetchAll() ?: [];
   }
 
   public static function paginate(int $page, int $limit = 50): array
   {
     $offset = ($page - 1) * $limit;
-    $sql = "SELECT * FROM " . self::getTableName() . " LIMIT {$limit} OFFSET {$offset}";
+    $sql = "SELECT * FROM " . self::getTableName();
+    if (property_exists(static::class, "created_at")) {
+      $sql .= " ORDER BY created_at DESC";
+    }
+    $sql .= " LIMIT {$limit} OFFSET {$offset}";
     $stmt = self::getConnection()->prepare($sql);
     $stmt->execute();
     $stmt->setFetchMode(PDO::FETCH_CLASS, static::class);
     return $stmt->fetchAll() ?: [];
   }
 
-  public static function paginateWithQuery(string $sql, int $page, int $limit = 50, bool $as_object = false): array
+  public static function paginateWithQuery(string $sql, int $page, int $limit = 50, bool $as_object = false, array $params = []): array
   {
     $offset = ($page - 1) * $limit;
     $sql = "{$sql} LIMIT {$limit} OFFSET {$offset}";
     $stmt = self::getConnection()->prepare($sql);
-    $stmt->execute();
+    $stmt->execute($params);
     if ($as_object) {
       $stmt->setFetchMode(PDO::FETCH_CLASS, static::class);
     } else {

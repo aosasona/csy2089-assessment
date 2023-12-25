@@ -6,7 +6,7 @@
  * @var int $current_page - the current page number
  */
 ?>
-<?php if ($current_count > 0 && $current_page <= 1) : ?>
+<?php if ($current_count > 0) : ?>
   <center class="mt-8">
     <div class="pagination">
       <?php if ($current_page > 1) : ?>

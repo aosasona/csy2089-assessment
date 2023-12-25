@@ -16,6 +16,7 @@ require_auth();
 
 $product_id = $_GET["id"] ?? "";
 $action = "add-product";
+
 if (!empty($product_id)) {
   try {
     $action = "update-product";
