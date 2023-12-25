@@ -81,12 +81,19 @@ render_header($product->name . " | Ed's Electronics");
     <ul class="reviews">
       <?php foreach ($enquiries as $enquiry) : ?>
         <li>
-          <p>Q: <?php echo $enquiry->question ?></p>
-          <p>A: <?php echo $enquiry->answer ?: "No response yet" ?></p>
+          <p>Q: <?php echo $enquiry["question"] ?></p>
+          <p>A: <?php echo $enquiry["answer"] ?: "No response yet" ?></p>
 
           <div class="details">
-            <strong>Reviewer Name</strong>
-            <em>10th December 2018</em>
+            <strong>
+              <?php
+              $name = $enquiry["first_name"] . " " . $enquiry["last_name"];
+              echo $name ?: $enquiry["username"] ?: "Anonymous"
+              ?>
+            </strong>
+            <em>
+              <?php echo date("jS F, Y", strtotime($enquiry["created_at"])) ?>
+            </em>
           </div>
         </li>
       <?php endforeach; ?>

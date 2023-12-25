@@ -225,6 +225,7 @@ h4 {
 
 .product_image {
 	aspect-ratio: 1/1;
+	object-fit: cover;
 
 	&.full-width {
 		width: 100%;

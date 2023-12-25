@@ -9,7 +9,7 @@ final class Enquiry extends BaseModel
   public ?int $asked_by;
   public ?int $answered_by;
   public string $question;
-  public string $answer;
+  public ?string $answer;
   public int $is_published;
   public string $created_at;
   public string $last_updated_at;
@@ -21,15 +21,6 @@ final class Enquiry extends BaseModel
     $enquiry->asked_by = $asked_by;
     $enquiry->question = $question;
     $enquiry->is_published = !$defer_publishing;
-    $enquiry->save();
-  }
-
-  public static function answer(int $enq_id, int $answered_by, string $answer): void
-  {
-    $enquiry = Enquiry::findByPK($enq_id);
-    $enquiry->answered_by = $answered_by;
-    $enquiry->answer = $answer;
-    $enquiry->is_published = true;
     $enquiry->save();
   }
 

@@ -52,6 +52,14 @@
 	justify-content: space-between;
 }
 
+.items-center {
+	align-items: center;
+}
+
+.items-start {
+	align-items: flex-start;
+}
+
 .gap-1 {
 	gap: 0.25rem;
 }

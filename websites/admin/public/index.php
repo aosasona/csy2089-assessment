@@ -62,7 +62,7 @@ render_header("Products");
                 <?php echo $product['name'] ?>
               </th>
               <td>
-                <?php echo (strlen($product['description']) > 100) ? substr($product['description'], 0, 100) . "..." : $product['description'] ?>
+                <?php echo (strlen($product['description']) > 50) ? substr($product['description'], 0, 50) . "..." : $product['description'] ?>
               </td>
               <td>
                 <?php echo $product['category_name'] ?>
